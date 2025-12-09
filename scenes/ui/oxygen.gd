@@ -1,6 +1,7 @@
 extends ProgressBar
 
 var tween : Tween
+var connected = []
 
 func oxygen_changed(oxygen):
 	tween = get_tree().create_tween()
@@ -15,7 +16,10 @@ func _process(delta: float) -> void:
 func scene_changed():
 	if Global.player:
 		oxygen_changed(1.0)
-		Global.player.oxygen_changed.connect(oxygen_changed)
+		if connected.find(Global.player) == -1:
+			Global.player.oxygen_changed.connect(oxygen_changed)
+			connected.append(Global.player)
+		
 
 func _ready() -> void:
 	await get_tree().create_timer(1.0).timeout

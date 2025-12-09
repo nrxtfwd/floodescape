@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ueeafjs3e6nn" path="res://scenes/scene_manager.gd" id="1_q7wi7"]
 [ext_resource type="Shader" uid="uid://btxti7vb63mge" path="res://shaders/bg.gdshader" id="2_6k21d"]
-[ext_resource type="PackedScene" uid="uid://cyjnmwjaxnqx5" path="res://scenes/ui/level_selection.tscn" id="2_cjhpt"]
+[ext_resource type="PackedScene" uid="uid://dvhl183y24iao" path="res://scenes/levels/level_3.tscn" id="2_cjhpt"]
 [ext_resource type="Shader" uid="uid://dujx0b5es0jbk" path="res://shaders/shadow.gdshader" id="3_cjhpt"]
 [ext_resource type="Script" uid="uid://drf3nhlklm028" path="res://scenes/canvas_group.gd" id="4_hhobr"]
 [ext_resource type="Shader" uid="uid://bwe8dyxx3mvov" path="res://shaders/vignette.gdshader" id="5_wofdf"]
