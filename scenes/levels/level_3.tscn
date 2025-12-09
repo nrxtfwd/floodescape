@@ -13,9 +13,8 @@ tile_set = ExtResource("1_0qepi")
 [node name="deco" type="TileMapLayer" parent="."]
 tile_set = ExtResource("2_fmg3e")
 
-[node name="player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("3_ftfob")]
+[node name="player" parent="." instance=ExtResource("3_ftfob")]
 position = Vector2(-72, -44)
-camera = NodePath("")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-63, -278)
