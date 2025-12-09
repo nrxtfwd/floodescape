@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0lusbsvrbtwf"]
+[gd_scene load_steps=6 format=3 uid="uid://c0lusbsvrbtwf"]
 
 [ext_resource type="Script" uid="uid://dkrs7aniaw4so" path="res://scenes/ui/level.gd" id="1_f5cxw"]
 [ext_resource type="Script" uid="uid://b4gpxxibulfj3" path="res://scenes/ui/died.gd" id="1_u7n8c"]
 [ext_resource type="Script" uid="uid://lvovmysgyxxj" path="res://scenes/ui/stars.gd" id="2_aac20"]
+[ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="3_g5kmx"]
+[ext_resource type="Script" uid="uid://c4ntva6k0yw0s" path="res://scenes/ui/oxygen.gd" id="4_0dwhk"]
 
 [node name="ui" type="CanvasLayer"]
 
@@ -46,6 +48,16 @@ text = "0/3 Stars"
 horizontal_alignment = 1
 script = ExtResource("2_aac20")
 
+[node name="oxygen" type="ProgressBar" parent="Control/MarginContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("3_g5kmx")
+max_value = 1.0
+value = 1.0
+script = ExtResource("4_0dwhk")
+
 [node name="died" type="ColorRect" parent="Control"]
 modulate = Color(1, 1, 1, 0)
 z_index = 9
@@ -84,4 +96,5 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "RESTART"
 
+[connection signal="visibility_changed" from="Control/MarginContainer/oxygen" to="Control/MarginContainer/oxygen" method="_on_visibility_changed"]
 [connection signal="pressed" from="Control/died/VBoxContainer/Button" to="Control/died" method="_on_button_pressed"]

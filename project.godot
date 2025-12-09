@@ -22,6 +22,7 @@ Global="*res://scripts/global.gd"
 [display]
 
 window/size/always_on_top=true
+window/stretch/mode="canvas_items"
 
 [gui]
 
@@ -62,6 +63,7 @@ down={
 2d_physics/layer_3="ladder"
 2d_physics/layer_4="exit"
 2d_physics/layer_5="water"
+2d_physics/layer_6="wall_jump"
 
 [rendering]
 

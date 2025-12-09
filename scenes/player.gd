@@ -11,11 +11,23 @@ const JUMP_VELOCITY = -400.0
 
 var last_jumped = 0
 var died = false
+var last_wall_jump = 0
 var was_underwater = false
 var last_on_floor = -100.0
 var on_ladder = false
+var is_underwater = false
 var water_jump = false
 var got_on_ladder = 0
+var oxygen = 100 :
+	set(value):
+		oxygen = min(max(value, 0.0), 100.0)
+		oxygen_changed.emit(value/100.0)
+		if oxygen <= 0 and !died:
+			died = true
+			Global.died.emit()
+
+signal oxygen_changed
+signal oxygen_bar_update
 
 func _ready() -> void:
 	Global.player = self
@@ -25,16 +37,30 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	var tick = Global.tick()
-	var is_underwater = len($water.get_overlapping_areas()) > 0
+	var is_wall_jumping = len($wall_jump.get_overlapping_bodies()) > 0 and tick - last_jumped > 0.2
+	is_underwater = len($water.get_overlapping_areas()) > 0
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		if !is_wall_jumping:
+			velocity += get_gravity() * delta
 	else:
 		last_on_floor = tick
 		water_jump = false
 	
-	var can_jump = Input.is_action_pressed("jump") and tick - last_on_floor <= 0.23 and tick - last_jumped > 0.45
-	if can_jump or (was_underwater and !is_underwater):
+	if is_wall_jumping:
+		velocity.y = 0
+	
+	var jump_from_water = (was_underwater and !is_underwater)
+	var can_jump = Input.is_action_pressed("jump") and ((tick - last_on_floor <= 0.23 and tick - last_jumped > 0.45) or (is_wall_jumping))
+	if can_jump or jump_from_water:
 		velocity.y = JUMP_VELOCITY
+		if is_wall_jumping:
+			var polarity = 0
+			if $wj_left.is_colliding():
+				polarity = 1.0
+			else:
+				polarity = -1.0
+			velocity.x = polarity * SPEED
+			last_wall_jump = tick
 		last_jumped = tick
 		anim_player.stop()
 		anim_player.play('squash')
@@ -45,29 +71,37 @@ func _physics_process(delta: float) -> void:
 			func():
 				jump.queue_free()
 		)
-		if !can_jump:
+		if jump_from_water:
+			print("JUMP FROM WATER")
 			var flip_dir = sign(velocity.x)
 			if flip_dir != 0:
 				water_jump = flip_dir
 	
-	#if water_jump:
-		#rotation += (1.0/360.0) * 2.0 * PI * 3.0 * sign(velocity.x)
+	if water_jump:
+		rotation += (1.0/360.0) * 2.0 * PI * 3.0 * water_jump
 	
 	var direction := Input.get_axis("left", "right")
 	if !is_underwater:
-		rotation = 0
-		if on_ladder:
-			velocity.y = Input.get_axis('up', 'down') * SPEED
-		if !on_ladder or (tick - got_on_ladder) > 0.3:
-			if direction:
-				velocity.x = direction * SPEED
-			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
+		if is_on_floor():
+			rotation = 0
+		if !is_wall_jumping and tick - last_wall_jump > 0.3:
+			if on_ladder:
+				velocity.y = Input.get_axis('up', 'down') * SPEED
+			if !on_ladder or (tick - got_on_ladder) > 0.3:
+				if direction:
+					velocity.x = direction * SPEED
+				else:
+					velocity.x = move_toward(velocity.x, 0, SPEED)
+		oxygen += 0.3
 	else:
+		oxygen -= 0.8
 		var swim_dir = Input.get_vector('left', 'right', 'up', 'down') * SPEED
 		velocity = velocity.move_toward(swim_dir, SPEED * 0.2)
-		look_at(global_position + velocity)
-		rotation += PI /2.0
+		if direction:
+			look_at(global_position + velocity)
+			rotation += PI /2.0
+		else:
+			rotation += (1.0/360.0) * 2.0 * PI
 	$swim.emitting = is_underwater
 	
 	walk_particles.emitting = direction and is_on_floor()
@@ -98,3 +132,7 @@ func finished(body: Node2D) -> void:
 	#died = true
 	#print("DIED")
 	#Global.died.emit()
+
+
+func wall_jumped(body: Node2D) -> void:
+	pass

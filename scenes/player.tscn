@@ -155,6 +155,23 @@ amount = 15
 texture = ExtResource("3_qhqgy")
 process_material = SubResource("ParticleProcessMaterial_tuyoq")
 
+[node name="wall_jump" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall_jump"]
+scale = Vector2(1.2, 1.2)
+shape = SubResource("CapsuleShape2D_g2els")
+
+[node name="wj_left" type="RayCast2D" parent="."]
+target_position = Vector2(-10, 0)
+collision_mask = 32
+
+[node name="wj_right" type="RayCast2D" parent="."]
+target_position = Vector2(10, 0)
+collision_mask = 32
+
 [connection signal="body_entered" from="ladder" to="." method="_on_ladder_body_entered"]
 [connection signal="body_exited" from="ladder" to="." method="_on_ladder_body_exited"]
 [connection signal="body_entered" from="exit" to="." method="finished"]
+[connection signal="body_entered" from="wall_jump" to="." method="wall_jumped"]
