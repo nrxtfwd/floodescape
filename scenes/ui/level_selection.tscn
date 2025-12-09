@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://cyjnmwjaxnqx5"]
+[gd_scene load_steps=15 format=3 uid="uid://cyjnmwjaxnqx5"]
 
 [ext_resource type="Script" uid="uid://dy3i76gfi5n6e" path="res://scenes/ui/level_selection.gd" id="1_l1igk"]
 [ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="1_r4y5g"]
 [ext_resource type="PackedScene" uid="uid://dy037shnb0rau" path="res://scenes/levels/level_1.tscn" id="2_hvilc"]
 [ext_resource type="PackedScene" uid="uid://c71r0m44qfvt2" path="res://scenes/levels/level_2.tscn" id="3_yssoo"]
 [ext_resource type="Shader" uid="uid://br6q47lbt6ynk" path="res://shaders/main_menu.gdshader" id="4_hg3rx"]
+[ext_resource type="PackedScene" uid="uid://dvhl183y24iao" path="res://scenes/levels/level_3.tscn" id="4_iwede"]
 [ext_resource type="Shader" uid="uid://bwe8dyxx3mvov" path="res://shaders/vignette.gdshader" id="5_n7r7k"]
 [ext_resource type="Texture2D" uid="uid://bi8vowommy813" path="res://assets/star.png" id="7_n7r7k"]
 
@@ -55,7 +56,7 @@ shadow_size = 5
 layer = 3
 script = ExtResource("1_l1igk")
 grid = NodePath("Control/GridContainer")
-levels = Array[PackedScene]([ExtResource("2_hvilc"), ExtResource("3_yssoo")])
+levels = Array[PackedScene]([ExtResource("2_hvilc"), ExtResource("3_yssoo"), ExtResource("4_iwede")])
 star_disabled_color = Color(0.3674035, 0.35634077, 0.07921081, 1)
 star_enabled_color = Color(0.9019608, 0.88235295, 0.36078432, 1)
 

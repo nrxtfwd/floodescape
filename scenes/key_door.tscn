@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dv2i5tgqnjsxq"]
+
+[ext_resource type="Script" uid="uid://ctptfhl1qjfrl" path="res://scenes/key_door.gd" id="1_dlisi"]
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_gtk2o"]
+[ext_resource type="Texture2D" uid="uid://dqrsbw6or0tw3" path="res://assets/keyhole.png" id="2_dlisi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_finw8"]
+size = Vector2(16, 16)
+
+[node name="key_door" type="StaticBody2D"]
+script = ExtResource("1_dlisi")
+
+[node name="base" type="Sprite2D" parent="."]
+texture = ExtResource("1_gtk2o")
+
+[node name="keyhole" type="Sprite2D" parent="."]
+texture = ExtResource("2_dlisi")
+
+[node name="col_shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_finw8")
+
+[node name="area" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="col_shape" type="CollisionShape2D" parent="area"]
+scale = Vector2(1.1, 1.1)
+shape = SubResource("RectangleShape2D_finw8")
+
+[connection signal="body_entered" from="area" to="." method="player_entered"]

@@ -5,12 +5,30 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
 @export var camera : Camera2D
+@export var pickup : PackedScene
 
 @onready var anim_player = $AnimationPlayer
 @onready var walk_particles = $walk_particles
 
+var destroy_cur_tool = false
 var last_jumped = 0
 var died = false
+var tool : Tool = null :
+	set(value):
+		
+		if tool and !destroy_cur_tool:
+			var t_p = pickup.instantiate()
+			t_p.global_position = global_position
+			t_p.disabled = true
+			t_p.velocity = Vector2.ZERO
+			t_p.gravity = true
+			t_p.tool = tool
+			Global.scene().add_child.call_deferred(t_p)
+		tool = value
+		if tool:
+			$tool.texture = tool.tool_texture
+		$tool.visible = true if tool else false
+		destroy_cur_tool = false
 var last_wall_jump = 0
 var was_underwater = false
 var last_on_floor = -100.0
@@ -28,6 +46,10 @@ var oxygen = 100 :
 
 signal oxygen_changed
 signal oxygen_bar_update
+
+func destroy_tool():
+	destroy_cur_tool = true
+	tool = null
 
 func _ready() -> void:
 	Global.player = self
@@ -103,6 +125,10 @@ func _physics_process(delta: float) -> void:
 		else:
 			rotation += (1.0/360.0) * 2.0 * PI
 	$swim.emitting = is_underwater
+	
+	if direction:
+		$tool.offset.x = 8.0 * direction
+		$tool.flip_h = direction < 0
 	
 	walk_particles.emitting = direction and is_on_floor()
 	move_and_slide()

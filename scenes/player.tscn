@@ -1,8 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://b8mouxvde0cjj"]
+[gd_scene load_steps=18 format=3 uid="uid://b8mouxvde0cjj"]
 
 [ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dmmlptxj2nsmi" path="res://scenes/player.gd" id="1_g2els"]
+[ext_resource type="PackedScene" uid="uid://ck4alxum1m72d" path="res://scenes/tool_pickup.tscn" id="2_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://cbwnwejc88o7" path="res://assets/bubble.png" id="3_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://bwckcpt5ab0ih" path="res://assets/key.png" id="4_dqkch"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g2els"]
 radius = 8.0
@@ -94,6 +96,7 @@ alpha_curve = SubResource("CurveTexture_qlg0r")
 scale = Vector2(1, 1.5)
 collision_layer = 2
 script = ExtResource("1_g2els")
+pickup = ExtResource("2_qlg0r")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_3vyb7")
@@ -170,6 +173,15 @@ collision_mask = 32
 [node name="wj_right" type="RayCast2D" parent="."]
 target_position = Vector2(10, 0)
 collision_mask = 32
+
+[node name="tool" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1.7602391, 1.7602391, 1.7602391, 1)
+z_index = 5
+z_as_relative = false
+scale = Vector2(2.5, 1.668)
+texture = ExtResource("4_dqkch")
+offset = Vector2(10, -2)
 
 [connection signal="body_entered" from="ladder" to="." method="_on_ladder_body_entered"]
 [connection signal="body_exited" from="ladder" to="." method="_on_ladder_body_exited"]

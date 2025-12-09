@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=4 uid="uid://bwyp45qv0nvp1"]
+[gd_scene load_steps=8 format=4 uid="uid://bwyp45qv0nvp1"]
 
 [ext_resource type="TileSet" uid="uid://cqve7eac1exay" path="res://tilesets/level.tres" id="1_qchbg"]
 [ext_resource type="TileSet" uid="uid://ccflxp1xbrjhy" path="res://tilesets/deco.tres" id="2_kddj0"]
 [ext_resource type="PackedScene" uid="uid://b8mouxvde0cjj" path="res://scenes/player.tscn" id="3_kddj0"]
 [ext_resource type="PackedScene" uid="uid://cu1io4cjm4c7t" path="res://scenes/flood.tscn" id="4_q8s1k"]
+[ext_resource type="PackedScene" uid="uid://dv2i5tgqnjsxq" path="res://scenes/key_door.tscn" id="5_mm0a5"]
+[ext_resource type="PackedScene" uid="uid://buaobh6sonor2" path="res://scenes/transition_area.tscn" id="6_o6wi6"]
+[ext_resource type="PackedScene" uid="uid://ck4alxum1m72d" path="res://scenes/tool_pickup.tscn" id="7_emj6c"]
 
 [node name="playground" type="Node2D"]
 
@@ -23,3 +26,26 @@ z_as_relative = false
 position = Vector2(591.99994, 581)
 scale = Vector2(90, 150)
 amp = 0.003
+
+[node name="key_door" parent="." node_paths=PackedStringArray("key_pickup") instance=ExtResource("5_mm0a5")]
+position = Vector2(751, 461)
+scale = Vector2(1, 10)
+key_pickup = NodePath("../tool_pickup")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(574, 322)
+
+[node name="transition_area" parent="." node_paths=PackedStringArray("camera", "camera_pos", "player_pos") instance=ExtResource("6_o6wi6")]
+position = Vector2(262, 517)
+camera = NodePath("../Camera2D")
+camera_pos = NodePath("camera_pos")
+player_pos = NodePath("player_pos")
+
+[node name="camera_pos" type="Node2D" parent="transition_area"]
+position = Vector2(667, -69)
+
+[node name="player_pos" type="Node2D" parent="transition_area"]
+position = Vector2(643, -350)
+
+[node name="tool_pickup" parent="." instance=ExtResource("7_emj6c")]
+position = Vector2(419, 510)

@@ -14,10 +14,16 @@ func reload_scene():
 func _ready() -> void:
 	change_scene(starting_scene)
 
-func change_scene(scene):
-	Global.scene_changed.emit()
+func run_fade(dur = 0.5):
 	fade.show()
 	fade.modulate = Color.BLACK
+	await get_tree().create_timer(dur * 0.2).timeout
+	var tween = get_tree().create_tween()
+	tween.tween_property(fade, 'modulate', Color(1,1,1,0), dur * 0.8)
+
+func change_scene(scene):
+	Global.scene_changed.emit()
+	
 	if cur_scene:
 		cur_scene.queue_free()
 	cur_scene_packed = scene
@@ -26,5 +32,5 @@ func change_scene(scene):
 		map.queue_free()
 	cur_scene = scene.instantiate()
 	cg.add_child.call_deferred(cur_scene)
-	var tween = get_tree().create_tween()
-	tween.tween_property(fade, 'modulate', Color(1,1,1,0), 0.5)
+	run_fade()
+	

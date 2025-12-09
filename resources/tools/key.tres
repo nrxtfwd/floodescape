@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tool" load_steps=3 format=3 uid="uid://blr17yrc2yb1t"]
+
+[ext_resource type="Script" uid="uid://cfbpy6x2b3a48" path="res://scripts/tool.gd" id="1_6pytu"]
+[ext_resource type="Texture2D" uid="uid://bwckcpt5ab0ih" path="res://assets/key.png" id="2_4pjdm"]
+
+[resource]
+script = ExtResource("1_6pytu")
+tool_name = "Key"
+tool_texture = ExtResource("2_4pjdm")
+metadata/_custom_type_script = "uid://cfbpy6x2b3a48"

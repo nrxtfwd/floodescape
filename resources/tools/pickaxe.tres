@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tool" load_steps=3 format=3 uid="uid://bmvo6ji6su7tv"]
+
+[ext_resource type="Script" uid="uid://cfbpy6x2b3a48" path="res://scripts/tool.gd" id="1_g3jp3"]
+[ext_resource type="Texture2D" uid="uid://ci37rnj05g7f8" path="res://assets/pickaxe.png" id="2_fh252"]
+
+[resource]
+script = ExtResource("1_g3jp3")
+tool_name = "Pickaxe"
+tool_texture = ExtResource("2_fh252")
+metadata/_custom_type_script = "uid://cfbpy6x2b3a48"
