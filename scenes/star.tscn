@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://buhcrm7a6urdt"]
+
+[ext_resource type="Script" uid="uid://b8tdvq6upm56a" path="res://scenes/star.gd" id="1_j6vao"]
+[ext_resource type="Texture2D" uid="uid://bi8vowommy813" path="res://assets/star.png" id="1_mcqwg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j6vao"]
+radius = 8.062258
+
+[sub_resource type="Curve" id="Curve_j6vao"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ef0hr"]
+curve = SubResource("Curve_j6vao")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8d8bx"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 50.0
+initial_velocity_max = 50.0
+gravity = Vector3(0, 0, 0)
+damping_min = 50.000004
+damping_max = 50.000004
+scale_min = 5.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_ef0hr")
+color = Color(1.4242057, 1.3963252, 0.58779603, 1)
+
+[node name="star" type="Area2D"]
+scale = Vector2(2, 2)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_j6vao")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.9, 0.88199997, 0.35999995, 1)
+texture = ExtResource("1_mcqwg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_j6vao")
+
+[node name="collected" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_8d8bx")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

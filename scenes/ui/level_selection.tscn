@@ -1,0 +1,165 @@
+[gd_scene load_steps=14 format=3 uid="uid://cyjnmwjaxnqx5"]
+
+[ext_resource type="Script" uid="uid://dy3i76gfi5n6e" path="res://scenes/ui/level_selection.gd" id="1_l1igk"]
+[ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="1_r4y5g"]
+[ext_resource type="PackedScene" uid="uid://dy037shnb0rau" path="res://scenes/levels/level_1.tscn" id="2_hvilc"]
+[ext_resource type="PackedScene" uid="uid://c71r0m44qfvt2" path="res://scenes/levels/level_2.tscn" id="3_yssoo"]
+[ext_resource type="Shader" uid="uid://br6q47lbt6ynk" path="res://shaders/main_menu.gdshader" id="4_hg3rx"]
+[ext_resource type="Shader" uid="uid://bwe8dyxx3mvov" path="res://shaders/vignette.gdshader" id="5_n7r7k"]
+[ext_resource type="Texture2D" uid="uid://bi8vowommy813" path="res://assets/star.png" id="7_n7r7k"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwede"]
+shader = ExtResource("4_hg3rx")
+shader_parameter/bottom_color = Color(0.18431373, 0.16470589, 0.20784314, 1)
+shader_parameter/top_color = Color(0.23137255, 0.25882354, 0.38431373, 1)
+shader_parameter/wave_amp = 0.3970000188575
+shader_parameter/wave_size = 1.8850000420375
+shader_parameter/wave_time_mul = 0.19300000590762
+shader_parameter/total_phases = 10
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tjon8"]
+shader = ExtResource("5_n7r7k")
+shader_parameter/radius = 0.800000038
+shader_parameter/softness = 0.2990000142025
+shader_parameter/intensity = 0.7590000360525
+shader_parameter/contrast = 2.2
+shader_parameter/vignette_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1igk"]
+shadow_color = Color(0, 0, 0, 0.6627451)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n7r7k"]
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+shadow_color = Color(0, 0, 0, 0.6627451)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iwede"]
+bg_color = Color(0.54497427, 0.5449743, 0.5449741, 1)
+shadow_color = Color(0, 0, 0, 0.6627451)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tjon8"]
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+shadow_color = Color(0, 0, 0, 0.6627451)
+shadow_size = 5
+
+[node name="level_selection" type="CanvasLayer" node_paths=PackedStringArray("grid")]
+layer = 3
+script = ExtResource("1_l1igk")
+grid = NodePath("Control/GridContainer")
+levels = Array[PackedScene]([ExtResource("2_hvilc"), ExtResource("3_yssoo")])
+star_disabled_color = Color(0.3674035, 0.35634077, 0.07921081, 1)
+star_enabled_color = Color(0.9019608, 0.88235295, 0.36078432, 1)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+material = SubResource("ShaderMaterial_iwede")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vignette" type="ColorRect" parent="Control"]
+material = SubResource("ShaderMaterial_tjon8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Label" type="Label" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 40
+text = "LEVEL SELECTION"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 50
+columns = 8
+
+[node name="temp" type="AspectRatioContainer" parent="Control/GridContainer"]
+visible = false
+layout_mode = 2
+stretch_mode = 1
+
+[node name="Button" type="Button" parent="Control/GridContainer/temp"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme = ExtResource("1_r4y5g")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_l1igk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_n7r7k")
+theme_override_styles/hover = SubResource("StyleBoxFlat_iwede")
+theme_override_styles/focus = SubResource("StyleBoxFlat_tjon8")
+text = "1"
+
+[node name="stars" type="HBoxContainer" parent="Control/GridContainer/temp/Button"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="star1" type="TextureRect" parent="Control/GridContainer/temp/Button/stars"]
+modulate = Color(0.9019608, 0.88235295, 0.36078432, 1)
+layout_mode = 2
+texture = ExtResource("7_n7r7k")
+
+[node name="star2" type="TextureRect" parent="Control/GridContainer/temp/Button/stars"]
+modulate = Color(0.9019608, 0.88235295, 0.36078432, 1)
+layout_mode = 2
+texture = ExtResource("7_n7r7k")
+
+[node name="star3" type="TextureRect" parent="Control/GridContainer/temp/Button/stars"]
+modulate = Color(0.9019608, 0.88235295, 0.36078432, 1)
+layout_mode = 2
+texture = ExtResource("7_n7r7k")

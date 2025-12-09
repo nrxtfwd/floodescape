@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://b7jgrptvwcnqf"]
+
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_qgauu"]
+[ext_resource type="Script" uid="uid://bwrutpir7pabt" path="res://scenes/one_way_platform.gd" id="1_wt31i"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wt31i"]
+size = Vector2(16, 16)
+
+[node name="one_way_platform" type="StaticBody2D"]
+modulate = Color(0.7607843, 0.72156864, 0.6627451, 1)
+script = ExtResource("1_wt31i")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_qgauu")
+
+[node name="col_shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wt31i")

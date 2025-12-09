@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfu2strc6v3ru"]
+
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_mi6dp"]
+[ext_resource type="Script" uid="uid://dy6btqyatmga8" path="res://scenes/button.gd" id="1_rhj8v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rhj8v"]
+size = Vector2(36.333332, 40)
+
+[node name="button" type="Area2D"]
+modulate = Color(1.3668314, 0.8513981, 0.6078417, 1)
+scale = Vector2(0.6, 0.6)
+collision_mask = 2
+script = ExtResource("1_rhj8v")
+switched_on = Color(0.6627451, 0.5058824, 0.2627451, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(4, 0)
+scale = Vector2(0.5, 2.5)
+texture = ExtResource("1_mi6dp")
+
+[node name="lever" type="Sprite2D" parent="."]
+position = Vector2(2.3333335, 0)
+rotation = -0.7853982
+scale = Vector2(2, 0.3)
+texture = ExtResource("1_mi6dp")
+offset = Vector2(-8, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-10.166666, -5.9604645e-07)
+shape = SubResource("RectangleShape2D_rhj8v")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

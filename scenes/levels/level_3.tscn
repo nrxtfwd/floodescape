@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvhl183y24iao"]
+
+[ext_resource type="TileSet" uid="uid://cqve7eac1exay" path="res://tilesets/level.tres" id="1_0qepi"]
+[ext_resource type="TileSet" uid="uid://ccflxp1xbrjhy" path="res://tilesets/deco.tres" id="2_fmg3e"]
+[ext_resource type="PackedScene" uid="uid://b8mouxvde0cjj" path="res://scenes/player.tscn" id="3_ftfob"]
+[ext_resource type="PackedScene" uid="uid://cu1io4cjm4c7t" path="res://scenes/flood.tscn" id="4_fkk1g"]
+
+[node name="level_3" type="Node2D"]
+
+[node name="map" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_0qepi")
+
+[node name="deco" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_fmg3e")
+
+[node name="player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("3_ftfob")]
+position = Vector2(-72, -44)
+camera = NodePath("")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-63, -278)
+zoom = Vector2(0.9, 0.9)
+
+[node name="flood" parent="." instance=ExtResource("4_fkk1g")]
+z_index = 10
+z_as_relative = false
+position = Vector2(-25.999996, 12)
+scale = Vector2(90, 150)
+metadata/_edit_lock_ = true

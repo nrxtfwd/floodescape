@@ -1,0 +1,160 @@
+[gd_scene load_steps=16 format=3 uid="uid://b8mouxvde0cjj"]
+
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://dmmlptxj2nsmi" path="res://scenes/player.gd" id="1_g2els"]
+[ext_resource type="Texture2D" uid="uid://cbwnwejc88o7" path="res://assets/bubble.png" id="3_qhqgy"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g2els"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="Animation" id="Animation_qhqgy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1.5)]
+}
+
+[sub_resource type="Animation" id="Animation_g2els"]
+resource_name = "squash"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1.5), Vector2(0.55, 1.9), Vector2(1, 1.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dqkch"]
+_data = {
+&"RESET": SubResource("Animation_qhqgy"),
+&"squash": SubResource("Animation_g2els")
+}
+
+[sub_resource type="Curve" id="Curve_g2els"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qhqgy"]
+curve = SubResource("Curve_g2els")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dqkch"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 6.0
+scale_max = 7.0
+scale_curve = SubResource("CurveTexture_qhqgy")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_g2els"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0.5, 0)
+spread = 90.0
+initial_velocity_min = 40.0
+initial_velocity_max = 50.0
+gravity = Vector3(0, 0, 0)
+damping_min = 50.000004
+damping_max = 50.000004
+scale_min = 9.0
+scale_max = 9.0
+scale_curve = SubResource("CurveTexture_qhqgy")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g2els"]
+size = Vector2(16, 0.66666603)
+
+[sub_resource type="Curve" id="Curve_dqkch"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qlg0r"]
+curve = SubResource("Curve_dqkch")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tuyoq"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(5, 1, 1)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+alpha_curve = SubResource("CurveTexture_qlg0r")
+
+[node name="player" type="CharacterBody2D"]
+scale = Vector2(1, 1.5)
+collision_layer = 2
+script = ExtResource("1_g2els")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_3vyb7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_g2els")
+
+[node name="ladder" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ladder"]
+shape = SubResource("CapsuleShape2D_g2els")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_dqkch")
+}
+speed_scale = 2.0
+
+[node name="walk_particles" type="GPUParticles2D" parent="."]
+z_index = 5
+z_as_relative = false
+position = Vector2(0, 8)
+emitting = false
+amount = 12
+process_material = SubResource("ParticleProcessMaterial_dqkch")
+
+[node name="jump" type="GPUParticles2D" parent="."]
+z_index = 5
+z_as_relative = false
+position = Vector2(0, 8)
+emitting = false
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+randomness = 0.38
+process_material = SubResource("ParticleProcessMaterial_g2els")
+
+[node name="exit" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="exit"]
+shape = SubResource("CapsuleShape2D_g2els")
+
+[node name="water" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="water"]
+position = Vector2(0, -7.666667)
+shape = SubResource("RectangleShape2D_g2els")
+
+[node name="swim" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 15
+texture = ExtResource("3_qhqgy")
+process_material = SubResource("ParticleProcessMaterial_tuyoq")
+
+[connection signal="body_entered" from="ladder" to="." method="_on_ladder_body_entered"]
+[connection signal="body_exited" from="ladder" to="." method="_on_ladder_body_exited"]
+[connection signal="body_entered" from="exit" to="." method="finished"]

@@ -1,0 +1,46 @@
+[gd_scene load_steps=9 format=3 uid="uid://cu1io4cjm4c7t"]
+
+[ext_resource type="Script" uid="uid://bijbxqjnawor0" path="res://scenes/flood.gd" id="1_5whog"]
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_eody1"]
+[ext_resource type="Shader" uid="uid://dm05ff2g2riee" path="res://shaders/flood.gdshader" id="1_j3acn"]
+
+[sub_resource type="Gradient" id="Gradient_j3acn"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5whog"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nvyf6"]
+noise = SubResource("FastNoiseLite_5whog")
+color_ramp = SubResource("Gradient_j3acn")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j3acn"]
+shader = ExtResource("1_j3acn")
+shader_parameter/base_y = 0.5
+shader_parameter/waterNoise = SubResource("NoiseTexture2D_nvyf6")
+shader_parameter/waterColor = Vector4(0.069, 0.333, 0.58, 1)
+shader_parameter/colorCorection = 0.0
+shader_parameter/distortionForce = 0.026
+shader_parameter/WDBrightness = 0.386
+shader_parameter/WDFreq = 0.39
+shader_parameter/WDSize = 2.0
+shader_parameter/WDSpeed = 3.658
+shader_parameter/tiling = Vector2(1.164, 1)
+shader_parameter/offSetSpeed = Vector2(0.035, 0.01)
+shader_parameter/wave_frequency = 15.0
+shader_parameter/wave_amplitude = 0.002
+shader_parameter/wave_speed = 3.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j3acn"]
+size = Vector2(16, 8)
+
+[node name="flood" type="Area2D"]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_5whog")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_j3acn")
+texture = ExtResource("1_eody1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_j3acn")

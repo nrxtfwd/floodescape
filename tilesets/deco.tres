@@ -1,0 +1,30 @@
+[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://ccflxp1xbrjhy"]
+
+[ext_resource type="Texture2D" uid="uid://d627iycqq5r1" path="res://assets/ladder.png" id="1_i8suj"]
+[ext_resource type="Texture2D" uid="uid://5hl2e46l0kp7" path="res://assets/exit.png" id="2_ee58n"]
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="3_e7cqh"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l37oo"]
+texture = ExtResource("1_i8suj")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-1.4388695, -8, 1.0791531, -8, 1.2590103, 8, -1.2590122, 8)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ibugp"]
+texture = ExtResource("2_ee58n")
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8qukl"]
+resource_name = "exit"
+texture = ExtResource("3_e7cqh")
+0:0/0 = 0
+0:0/0/modulate = Color(0.26666668, 0.23921569, 0.21960784, 1)
+0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[resource]
+physics_layer_0/collision_layer = 4
+physics_layer_0/collision_mask = 0
+physics_layer_1/collision_layer = 8
+physics_layer_1/collision_mask = 0
+sources/0 = SubResource("TileSetAtlasSource_l37oo")
+sources/1 = SubResource("TileSetAtlasSource_ibugp")
+sources/2 = SubResource("TileSetAtlasSource_8qukl")

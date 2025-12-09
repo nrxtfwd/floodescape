@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnplb2lq4o4a3"]
+
+[ext_resource type="Texture2D" uid="uid://5hl2e46l0kp7" path="res://assets/exit.png" id="1_l0aq0"]
+
+[node name="Exit" type="Sprite2D"]
+scale = Vector2(3, 3)
+texture = ExtResource("1_l0aq0")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -5.4999995
+offset_top = -3.4999998
+offset_right = 100.5
+offset_bottom = 61.5
+scale = Vector2(0.1, 0.1)
+theme_override_font_sizes/font_size = 64
+text = "EXIT"

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6iahs0rge8g"]
+
+[ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_hpvv5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uvdjg"]
+size = Vector2(16, 16)
+
+[node name="door" type="StaticBody2D"]
+modulate = Color(0.38431373, 0.3372549, 0.3254902, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_hpvv5")
+
+[node name="col_shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uvdjg")

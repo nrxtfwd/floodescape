@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0lusbsvrbtwf"]
+
+[ext_resource type="Script" uid="uid://dkrs7aniaw4so" path="res://scenes/ui/level.gd" id="1_f5cxw"]
+[ext_resource type="Script" uid="uid://b4gpxxibulfj3" path="res://scenes/ui/died.gd" id="1_u7n8c"]
+[ext_resource type="Script" uid="uid://lvovmysgyxxj" path="res://scenes/ui/stars.gd" id="2_aac20"]
+
+[node name="ui" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="level" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Level 1-1"
+script = ExtResource("1_f5cxw")
+
+[node name="stars" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+modulate = Color(0.9019608, 0.88235295, 0.36078432, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0/3 Stars"
+horizontal_alignment = 1
+script = ExtResource("2_aac20")
+
+[node name="died" type="ColorRect" parent="Control"]
+modulate = Color(1, 1, 1, 0)
+z_index = 9
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_u7n8c")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/died"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Control/died/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "YOU DROWNED"
+
+[node name="Button" type="Button" parent="Control/died/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "RESTART"
+
+[connection signal="pressed" from="Control/died/VBoxContainer/Button" to="Control/died" method="_on_button_pressed"]
