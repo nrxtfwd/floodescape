@@ -8,7 +8,7 @@ var activated = false
 
 func _ready() -> void:
 	if inverted:
-		object.hide()
+		object.modulate = Color(1,1,1,0.5)
 		object.get_node('col_shape').set_deferred('disabled', true)
 
 func _on_body_entered(body: Node2D) -> void:
@@ -21,7 +21,7 @@ func _on_body_entered(body: Node2D) -> void:
 	tween.tween_property($lever, 'rotation', PI/4.0, 0.5)
 	
 	if inverted:
-		object.show()
+		object.modulate = Color.WHITE
 		object.get_node('col_shape').set_deferred('disabled', false)
 	else:
 		object.queue_free()

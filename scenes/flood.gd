@@ -2,8 +2,7 @@ extends Area2D
 
 @onready var sprite = $Sprite2D
 
-var normal_velocity = Vector2(0,-0.2)
-
+@export var normal_velocity = Vector2(0,-0.2)
 @export var velocity = Vector2.ZERO
 @export var start_delay = 0.01
 @export var amp : float = 0.002

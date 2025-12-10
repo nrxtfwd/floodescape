@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cyjnmwjaxnqx5"]
+[gd_scene load_steps=19 format=3 uid="uid://cyjnmwjaxnqx5"]
 
 [ext_resource type="Script" uid="uid://dy3i76gfi5n6e" path="res://scenes/ui/level_selection.gd" id="1_l1igk"]
 [ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="1_r4y5g"]
@@ -7,7 +7,11 @@
 [ext_resource type="Shader" uid="uid://br6q47lbt6ynk" path="res://shaders/main_menu.gdshader" id="4_hg3rx"]
 [ext_resource type="PackedScene" uid="uid://dvhl183y24iao" path="res://scenes/levels/level_3.tscn" id="4_iwede"]
 [ext_resource type="Shader" uid="uid://bwe8dyxx3mvov" path="res://shaders/vignette.gdshader" id="5_n7r7k"]
+[ext_resource type="PackedScene" uid="uid://fh311y3i312i" path="res://scenes/levels/level_4.tscn" id="5_tjon8"]
 [ext_resource type="Texture2D" uid="uid://bi8vowommy813" path="res://assets/star.png" id="7_n7r7k"]
+[ext_resource type="PackedScene" uid="uid://h6t6bilbebvn" path="res://scenes/ui/level_selection_world_button.tscn" id="8_bxy7t"]
+[ext_resource type="Texture2D" uid="uid://c7m8t2jvhhrti" path="res://assets/facility.png" id="9_q7wdm"]
+[ext_resource type="Texture2D" uid="uid://bxyx6qyqos2sy" path="res://assets/stronghold_button.png" id="10_bnl3k"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iwede"]
 shader = ExtResource("4_hg3rx")
@@ -52,13 +56,15 @@ border_blend = true
 shadow_color = Color(0, 0, 0, 0.6627451)
 shadow_size = 5
 
-[node name="level_selection" type="CanvasLayer" node_paths=PackedStringArray("grid")]
+[node name="level_selection" type="CanvasLayer" node_paths=PackedStringArray("grid", "select_first_world_button", "world_name_label")]
 layer = 3
 script = ExtResource("1_l1igk")
 grid = NodePath("Control/GridContainer")
-levels = Array[PackedScene]([ExtResource("2_hvilc"), ExtResource("3_yssoo"), ExtResource("4_iwede")])
+levels = Array[PackedScene]([ExtResource("2_hvilc"), ExtResource("3_yssoo"), ExtResource("4_iwede"), ExtResource("5_tjon8")])
 star_disabled_color = Color(0.3674035, 0.35634077, 0.07921081, 1)
 star_enabled_color = Color(0.9019608, 0.88235295, 0.36078432, 1)
+select_first_world_button = NodePath("Control/MarginContainer/worlds/facility")
+world_name_label = NodePath("Control/MarginContainer/VBoxContainer/world_name")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -100,12 +106,44 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Label" type="Label" parent="Control/MarginContainer"]
+[node name="worlds" type="HBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 10
+
+[node name="facility" parent="Control/MarginContainer/worlds" instance=ExtResource("8_bxy7t")]
+layout_mode = 2
+button_texture = ExtResource("9_q7wdm")
+stars_required = 0
+
+[node name="stronghold" parent="Control/MarginContainer/worlds" instance=ExtResource("8_bxy7t")]
+layout_mode = 2
+world_name = "Stronghold"
+button_texture = ExtResource("10_bnl3k")
+level_range_start = 4
+level_range_end = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="title" type="Label" parent="Control/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 40
-text = "LEVEL SELECTION"
+text = "LEVEL SELECTION ..."
+horizontal_alignment = 1
+
+[node name="world_name" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+modulate = Color(0.6012422, 0.58978117, 0.7103598, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 40
+text = "FACILITY"
 horizontal_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="Control"]
@@ -132,6 +170,7 @@ stretch_mode = 1
 [node name="Button" type="Button" parent="Control/GridContainer/temp"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme = ExtResource("1_r4y5g")
 theme_override_font_sizes/font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxFlat_l1igk")

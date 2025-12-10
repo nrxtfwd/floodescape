@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=4 uid="uid://c71r0m44qfvt2"]
+[gd_scene load_steps=12 format=4 uid="uid://c71r0m44qfvt2"]
 
 [ext_resource type="Script" uid="uid://b6ev1jlfekcfk" path="res://scenes/levels/level_2.gd" id="1_8qukl"]
 [ext_resource type="TileSet" uid="uid://cqve7eac1exay" path="res://tilesets/level.tres" id="1_g2h2n"]
+[ext_resource type="PackedScene" uid="uid://dvhl183y24iao" path="res://scenes/levels/level_3.tscn" id="2_nt80m"]
 [ext_resource type="TileSet" uid="uid://ccflxp1xbrjhy" path="res://tilesets/deco.tres" id="2_qpwj6"]
 [ext_resource type="PackedScene" uid="uid://b8mouxvde0cjj" path="res://scenes/player.tscn" id="2_ra442"]
 [ext_resource type="PackedScene" uid="uid://dfu2strc6v3ru" path="res://scenes/button.tscn" id="4_fiq81"]
@@ -13,6 +14,7 @@
 
 [node name="level_2" type="Node2D"]
 script = ExtResource("1_8qukl")
+next_level = ExtResource("2_nt80m")
 level_id = "1-2"
 
 [node name="map" type="TileMapLayer" parent="."]

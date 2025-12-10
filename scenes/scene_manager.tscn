@@ -1,12 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://m7hx2655gk78"]
+[gd_scene load_steps=15 format=3 uid="uid://m7hx2655gk78"]
 
 [ext_resource type="Script" uid="uid://ueeafjs3e6nn" path="res://scenes/scene_manager.gd" id="1_q7wi7"]
 [ext_resource type="Shader" uid="uid://btxti7vb63mge" path="res://shaders/bg.gdshader" id="2_6k21d"]
-[ext_resource type="PackedScene" uid="uid://dvhl183y24iao" path="res://scenes/levels/level_3.tscn" id="2_cjhpt"]
-[ext_resource type="Shader" uid="uid://dujx0b5es0jbk" path="res://shaders/shadow.gdshader" id="3_cjhpt"]
+[ext_resource type="PackedScene" uid="uid://cyjnmwjaxnqx5" path="res://scenes/ui/level_selection.tscn" id="2_hhobr"]
 [ext_resource type="Script" uid="uid://drf3nhlklm028" path="res://scenes/canvas_group.gd" id="4_hhobr"]
 [ext_resource type="Shader" uid="uid://bwe8dyxx3mvov" path="res://shaders/vignette.gdshader" id="5_wofdf"]
 [ext_resource type="PackedScene" uid="uid://c0lusbsvrbtwf" path="res://scenes/ui/ui.tscn" id="7_cjhpt"]
+[ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="8_hhobr"]
+[ext_resource type="Script" uid="uid://4lgd4ethfprs" path="res://scenes/debug_menu.gd" id="8_wofdf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2lhpl"]
 shader = ExtResource("2_6k21d")
@@ -34,8 +35,85 @@ glow_hdr_scale = 3.38
 glow_hdr_luminance_cap = 251.48
 glow_map_strength = 1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ae61e"]
-shader = ExtResource("3_cjhpt")
+[sub_resource type="Shader" id="Shader_hhobr"]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform vec4 drop_shadow_color : source_color = vec4(0.0, 0.0, 0.0, 0.5);
+uniform float shadow_offset_x : hint_range(-0.3, 0.3) = 0.05;
+uniform float shadow_offset_y : hint_range(-0.3, 0.3) = 0.05;
+uniform float shadow_rotation : hint_range(0.0, 360.0) = 0.0;
+uniform vec2 rotation_pivot = vec2(0.5, 0.5);
+
+uniform float shadow_blur_strength : hint_range(0.0, 20.0) = 2.0;
+uniform int shadow_blur_samples : hint_range(3, 8, 1) = 4;
+uniform float _blur_scale_factor = 1.0;
+
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, repeat_disable, filter_linear_mipmap;
+
+vec2 rotate_uv(vec2 uv, float angle, vec2 aspect_correction) {
+    uv -= rotation_pivot;
+    uv *= aspect_correction; // Correct aspect ratio before rotation
+    float s = sin(angle);
+    float c = cos(angle);
+    vec2 rotated = vec2(
+        uv.x * c - uv.y * s,
+        uv.x * s + uv.y * c
+    );
+    rotated /= aspect_correction; // Restore original proportions
+    return rotated + rotation_pivot;
+}
+
+vec4 get_rotated_shadow(vec2 uv, float rotation, vec2 aspect) {
+    vec2 corrected_uv = rotate_uv(uv, rotation, aspect);
+    return texture(SCREEN_TEXTURE, corrected_uv);
+}
+
+vec4 apply_shadow_blur(vec2 uv, vec2 pixel_size, vec2 offset, float rotation, vec2 aspect) {
+    float samples = float(pow(2.0, float(shadow_blur_samples)));
+	float scaled_blur_strength = shadow_blur_strength * _blur_scale_factor;
+    float layer_increment = scaled_blur_strength / samples;
+    float angle_increment = TAU / samples;
+
+    // Base rotated shadow
+    vec4 shadow_base = get_rotated_shadow(uv - offset, rotation, aspect);
+    vec4 color = vec4(drop_shadow_color.rgb, drop_shadow_color.a * shadow_base.a);
+
+    if (scaled_blur_strength <= 0.0) return color;
+
+    // Blur with aspect-corrected rotation
+    for (float d = layer_increment; d <= scaled_blur_strength; d += layer_increment) {
+        vec4 layer_color = vec4(0.0);
+        for (float t = 0.0; t < TAU; t += angle_increment) {
+            vec2 sample_uv = uv - offset + vec2(cos(t), sin(t)) * d * pixel_size;
+            vec4 sample = get_rotated_shadow(sample_uv, rotation, aspect);
+            layer_color += vec4(drop_shadow_color.rgb, drop_shadow_color.a * sample.a);
+        }
+        layer_color /= samples;
+        float weight = 1.0 - sqrt(d / scaled_blur_strength);
+        color = mix(color, layer_color, weight);
+    }
+
+    return color;
+}
+
+void fragment() {
+    vec2 pixel_size = SCREEN_PIXEL_SIZE;
+    vec2 uv = SCREEN_UV;
+    float rotation = radians(shadow_rotation);
+    vec2 offset = vec2(shadow_offset_x, shadow_offset_y);
+    
+    // Calculate aspect ratio correction (width/height, height/width)
+    vec2 aspect = vec2(1.0, SCREEN_PIXEL_SIZE.x/SCREEN_PIXEL_SIZE.y);
+
+    vec4 original = texture(SCREEN_TEXTURE, uv);
+    vec4 shadow = apply_shadow_blur(uv, pixel_size, offset, rotation, aspect);
+
+    COLOR = mix(shadow, original, original.a);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wofdf"]
+shader = SubResource("Shader_hhobr")
 shader_parameter/drop_shadow_color = Color(0, 0, 0, 0.6392157)
 shader_parameter/shadow_offset_x = 0.00200000242407
 shader_parameter/shadow_offset_y = 0.00300000247157
@@ -45,9 +123,21 @@ shader_parameter/shadow_blur_strength = 5.65600026866
 shader_parameter/shadow_blur_samples = 4
 shader_parameter/_blur_scale_factor = 1.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wofdf"]
+bg_color = Color(0.43529412, 0.46666667, 0.46666667, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+shadow_color = Color(0, 0, 0, 0.54509807)
+shadow_size = 5
+
 [node name="scene_manager" type="Node2D" node_paths=PackedStringArray("fade")]
 script = ExtResource("1_q7wi7")
-starting_scene = ExtResource("2_cjhpt")
+starting_scene = ExtResource("2_hhobr")
 fade = NodePath("fade/Control/ColorRect")
 
 [node name="background_layer" type="CanvasLayer" parent="."]
@@ -87,7 +177,7 @@ size_flags_vertical = 3
 environment = SubResource("Environment_kad1h")
 
 [node name="CanvasGroup" type="CanvasGroup" parent="."]
-material = SubResource("ShaderMaterial_ae61e")
+material = SubResource("ShaderMaterial_wofdf")
 script = ExtResource("4_hhobr")
 
 [node name="ui" parent="." instance=ExtResource("7_cjhpt")]
@@ -114,3 +204,28 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="debug_menu" type="VBoxContainer" parent="fade/Control"]
+visible = false
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = 940.0
+offset_top = 42.0
+offset_right = 980.0
+offset_bottom = 82.0
+script = ExtResource("8_wofdf")
+
+[node name="Label" type="Label" parent="fade/Control/debug_menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Debug Menu"
+horizontal_alignment = 1
+
+[node name="fly" type="Button" parent="fade/Control/debug_menu"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme = ExtResource("8_hhobr")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wofdf")
+text = "Fly"
+
+[connection signal="pressed" from="fade/Control/debug_menu/fly" to="fade/Control/debug_menu" method="_on_fly_pressed"]

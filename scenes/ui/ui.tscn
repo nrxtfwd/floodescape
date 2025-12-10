@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0lusbsvrbtwf"]
+[gd_scene load_steps=9 format=3 uid="uid://c0lusbsvrbtwf"]
 
 [ext_resource type="Script" uid="uid://dkrs7aniaw4so" path="res://scenes/ui/level.gd" id="1_f5cxw"]
 [ext_resource type="Script" uid="uid://b4gpxxibulfj3" path="res://scenes/ui/died.gd" id="1_u7n8c"]
@@ -6,6 +6,48 @@
 [ext_resource type="Theme" uid="uid://dqkoqj84qg1dt" path="res://themes/default.tres" id="3_g5kmx"]
 [ext_resource type="Script" uid="uid://c4ntva6k0yw0s" path="res://scenes/ui/oxygen.gd" id="4_0dwhk"]
 [ext_resource type="Texture2D" uid="uid://cwd283gx138t8" path="res://assets/oxygen_bubble.png" id="5_pfayw"]
+
+[sub_resource type="Shader" id="Shader_pfayw"]
+code = "shader_type canvas_item;
+
+// Stronger defaults
+uniform float radius:    hint_range(0.0, 1.0) = 0.22;  // where darkening starts (smaller = more encroachment)
+uniform float softness:  hint_range(0.0, 1.0) = 0.38;  // feather width toward center
+uniform float intensity: hint_range(0.0, 3.0) = 2.00;  // overall darkness
+uniform float contrast:  hint_range(0.5, 4.0) = 2.20;  // >1.0 sharpens falloff
+uniform vec4 vignette_color: source_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+void fragment() {
+    vec2 uv = SCREEN_UV;
+    vec2 centered = uv - vec2(0.5);
+
+    // Edge-driven shape (0 at center, 1 at edges):
+    // Chebyshev distance = pushes from ALL edges uniformly
+    float edge_box = max(abs(centered.x) * 2.0, abs(centered.y) * 2.0);
+
+    // Blend a little radial in to avoid a \"boxy\" look (optional)
+    float edge_radial = length(centered) * 2.0; // 0 center -> ~1 corners
+    float shape = mix(edge_box, edge_radial, 0.25);
+
+    // Darken from radius inward with feather = softness
+    float v = smoothstep(radius, radius + softness, shape);
+    v = pow(v, contrast);
+
+    vec4 overlay = vignette_color;
+    overlay.a = clamp(v * intensity, 0.0, 1.0);
+
+    // Output just the vignette color/alpha (use on a full-screen ColorRect)
+    COLOR = overlay;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7vp6q"]
+shader = SubResource("Shader_pfayw")
+shader_parameter/radius = 1.0
+shader_parameter/softness = 0.2990000142025
+shader_parameter/intensity = 0.7590000360525
+shader_parameter/contrast = 2.2
+shader_parameter/vignette_color = Color(1, 0.26, 0.26, 1)
 
 [node name="ui" type="CanvasLayer"]
 
@@ -37,11 +79,16 @@ theme_override_constants/separation = 0
 
 [node name="level" type="Label" parent="Control/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5372549)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 3
 theme_override_font_sizes/font_size = 32
 text = "Level 1-1"
 script = ExtResource("1_f5cxw")
 
 [node name="stars" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+visible = false
 modulate = Color(0.9019608, 0.88235295, 0.36078432, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
@@ -49,7 +96,7 @@ text = "0/3 Stars"
 horizontal_alignment = 1
 script = ExtResource("2_aac20")
 
-[node name="oxygen" type="ProgressBar" parent="Control/MarginContainer"]
+[node name="oxygen" type="ProgressBar" parent="Control/MarginContainer" node_paths=PackedStringArray("drowning")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -57,8 +104,9 @@ size_flags_vertical = 8
 theme = ExtResource("3_g5kmx")
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 max_value = 1.0
-value = 0.5
+value = 1.0
 script = ExtResource("4_0dwhk")
+drowning = NodePath("../../drowning")
 
 [node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/oxygen"]
 layout_mode = 1
@@ -109,6 +157,18 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "RESTART"
+
+[node name="drowning" type="ColorRect" parent="Control"]
+material = SubResource("ShaderMaterial_7vp6q")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
 
 [connection signal="visibility_changed" from="Control/MarginContainer/oxygen" to="Control/MarginContainer/oxygen" method="_on_visibility_changed"]
 [connection signal="pressed" from="Control/died/VBoxContainer/Button" to="Control/died" method="_on_button_pressed"]

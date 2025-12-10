@@ -1,10 +1,13 @@
-[gd_scene load_steps=18 format=3 uid="uid://b8mouxvde0cjj"]
+[gd_scene load_steps=19 format=3 uid="uid://b8mouxvde0cjj"]
 
 [ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dmmlptxj2nsmi" path="res://scenes/player.gd" id="1_g2els"]
 [ext_resource type="PackedScene" uid="uid://ck4alxum1m72d" path="res://scenes/tool_pickup.tscn" id="2_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://cbwnwejc88o7" path="res://assets/bubble.png" id="3_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://bwckcpt5ab0ih" path="res://assets/key.png" id="4_dqkch"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
+size = Vector2(16, 15.333334)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g2els"]
 radius = 8.0
@@ -102,7 +105,8 @@ pickup = ExtResource("2_qlg0r")
 texture = ExtResource("1_3vyb7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_g2els")
+position = Vector2(0, 0.33333325)
+shape = SubResource("RectangleShape2D_qlg0r")
 
 [node name="ladder" type="Area2D" parent="."]
 collision_layer = 0

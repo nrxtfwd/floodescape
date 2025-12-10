@@ -6,6 +6,8 @@ extends Area2D
 @export var fade_duration = 1.0
 @export var only_from = 0
 
+signal transitioned
+
 func _ready() -> void:
 	if !get_node_or_null('camera_pos') and !camera_pos:
 		push_error("NO CAMERA POS NODE IN TRANSITION AREA")

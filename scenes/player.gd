@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -320.0
 
 @export var camera : Camera2D
 @export var pickup : PackedScene
@@ -33,6 +33,7 @@ var last_wall_jump = 0
 var was_underwater = false
 var last_on_floor = -100.0
 var on_ladder = false
+var in_air_from_jump = false
 var is_underwater = false
 var water_jump = false
 var got_on_ladder = 0
@@ -63,16 +64,25 @@ func _physics_process(delta: float) -> void:
 	is_underwater = len($water.get_overlapping_areas()) > 0
 	if not is_on_floor():
 		if !is_wall_jumping:
-			velocity += get_gravity() * delta
+			var mul = 1.0
+			if in_air_from_jump:
+				if abs(velocity.y) <= 10.0:
+					mul = 0.7
+				elif velocity.y > 0:
+					mul = 2.2
+			velocity.y += 1100.0 * delta * mul
 	else:
+		in_air_from_jump = false
 		last_on_floor = tick
 		water_jump = false
 	
 	if is_wall_jumping:
+		rotation = 0
 		velocity.y = 0
 	
 	var jump_from_water = (was_underwater and !is_underwater)
-	var can_jump = Input.is_action_pressed("jump") and ((tick - last_on_floor <= 0.23 and tick - last_jumped > 0.45) or (is_wall_jumping))
+	var pressing_jump = Input.is_action_pressed("jump")
+	var can_jump = pressing_jump and ((tick - last_on_floor <= 0.23 and tick - last_jumped > 0.45) or (is_wall_jumping))
 	if can_jump or jump_from_water:
 		velocity.y = JUMP_VELOCITY
 		if is_wall_jumping:
@@ -94,11 +104,14 @@ func _physics_process(delta: float) -> void:
 				jump.queue_free()
 		)
 		if jump_from_water:
-			print("JUMP FROM WATER")
 			var flip_dir = sign(velocity.x)
 			if flip_dir != 0:
 				water_jump = flip_dir
-	
+		else:
+			in_air_from_jump = true
+	if pressing_jump:
+		if tick - last_jumped <= 0.1:
+			velocity.y -= 20.0
 	if water_jump:
 		rotation += (1.0/360.0) * 2.0 * PI * 3.0 * water_jump
 	
@@ -118,6 +131,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		oxygen -= 0.8
 		var swim_dir = Input.get_vector('left', 'right', 'up', 'down') * SPEED
+		if pressing_jump:
+			swim_dir.y = -1.0
 		velocity = velocity.move_toward(swim_dir, SPEED * 0.2)
 		if direction:
 			look_at(global_position + velocity)

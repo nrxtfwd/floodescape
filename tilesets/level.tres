@@ -1,13 +1,17 @@
-[gd_resource type="TileSet" load_steps=6 format=3 uid="uid://cqve7eac1exay"]
+[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://cqve7eac1exay"]
 
 [ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="1_eu1fi"]
 [ext_resource type="Texture2D" uid="uid://tn4ukx8fe1ik" path="res://assets/wall_jump.png" id="2_sur4m"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_sur4m"]
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sur4m"]
 resource_name = "block"
 texture = ExtResource("1_eu1fi")
 0:0/0 = 0
 0:0/0/modulate = Color(0.8509804, 0.85882354, 0.7294118, 1)
+0:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_sur4m")
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eu1fi"]
@@ -23,6 +27,8 @@ texture = ExtResource("2_sur4m")
 0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [resource]
+occlusion_layer_0/light_mask = 1
+occlusion_layer_0/sdf_collision = true
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 33
 sources/0 = SubResource("TileSetAtlasSource_sur4m")

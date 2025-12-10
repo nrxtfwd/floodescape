@@ -1,9 +1,12 @@
-[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://ccflxp1xbrjhy"]
+[gd_resource type="TileSet" load_steps=13 format=3 uid="uid://ccflxp1xbrjhy"]
 
 [ext_resource type="Texture2D" uid="uid://d627iycqq5r1" path="res://assets/ladder.png" id="1_i8suj"]
 [ext_resource type="Texture2D" uid="uid://5hl2e46l0kp7" path="res://assets/exit.png" id="2_ee58n"]
 [ext_resource type="Texture2D" uid="uid://5xflmf0hdhhq" path="res://assets/rect.png" id="3_e7cqh"]
 [ext_resource type="Texture2D" uid="uid://dqrsbw6or0tw3" path="res://assets/keyhole.png" id="4_ee58n"]
+[ext_resource type="PackedScene" uid="uid://dqjlpqktov03s" path="res://scenes/brick.tscn" id="5_e7cqh"]
+[ext_resource type="PackedScene" uid="uid://l0kpleglor1v" path="res://scenes/falling_platform.tscn" id="6_3rmnn"]
+[ext_resource type="PackedScene" uid="uid://b7jgrptvwcnqf" path="res://scenes/one_way_platform.tscn" id="7_d5a0w"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l37oo"]
 texture = ExtResource("1_i8suj")
@@ -25,6 +28,11 @@ texture = ExtResource("3_e7cqh")
 texture = ExtResource("4_ee58n")
 0:0/0 = 0
 
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_ee58n"]
+scenes/1/scene = ExtResource("5_e7cqh")
+scenes/2/scene = ExtResource("6_3rmnn")
+scenes/3/scene = ExtResource("7_d5a0w")
+
 [resource]
 physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
@@ -34,3 +42,4 @@ sources/0 = SubResource("TileSetAtlasSource_l37oo")
 sources/1 = SubResource("TileSetAtlasSource_ibugp")
 sources/2 = SubResource("TileSetAtlasSource_8qukl")
 sources/3 = SubResource("TileSetAtlasSource_e7cqh")
+sources/4 = SubResource("TileSetScenesCollectionSource_ee58n")
